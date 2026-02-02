@@ -14,10 +14,11 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const profileRes = await axios.get('http://localhost:5000/api/profile');
+                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+                const profileRes = await axios.get(`${API_URL}/api/profile`);
                 setProfile(profileRes.data);
 
-                const projectsRes = await axios.get('http://localhost:5000/api/projects');
+                const projectsRes = await axios.get(`${API_URL}/api/projects`);
                 setProjects(projectsRes.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
