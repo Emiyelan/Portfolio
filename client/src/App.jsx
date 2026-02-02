@@ -7,47 +7,52 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 
 function App() {
-    const [profile, setProfile] = useState(null);
-    const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(true);
+    import { profile as localProfile } from './data/profile';
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+    function App() {
+        const [profile, setProfile] = useState(localProfile);
+        const [projects, setProjects] = useState([]);
+        const [loading, setLoading] = useState(true);
 
-                const profileRes = await axios.get(`${API_URL}/api/profile`);
-                setProfile(profileRes.data);
+        useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    // Fetch Projects directly from GitHub
+                    const githubUsername = 'Emiyelan';
+                    const projectsRes = await axios.get(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=6`);
+                    setProjects(projectsRes.data);
+                } catch (error) {
+                    console.error("Error fetching projects from GitHub:", error);
+                    // Fallback projects if GitHub API limit reached
+                    setProjects([
+                        { id: 1, name: 'Portfolio-MERN', description: 'My personal portfolio website.', html_url: 'https://github.com/Emiyelan', language: 'JavaScript' },
+                        { id: 2, name: 'Project-Placeholder', description: 'A sample project.', html_url: 'https://github.com/Emiyelan', language: 'JavaScript' }
+                    ]);
+                } finally {
+                    setLoading(false);
+                }
+            };
 
-                const projectsRes = await axios.get(`${API_URL}/api/projects`);
-                setProjects(projectsRes.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+            fetchData();
+        }, []);
 
-        fetchData();
-    }, []);
+        if (loading) {
+            return (
+                <div className="h-screen w-full bg-primary flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-accent"></div>
+                </div>
+            );
+        }
 
-    if (loading) {
         return (
-            <div className="h-screen w-full bg-primary flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-accent"></div>
+            <div className="bg-primary min-h-screen text-white font-sans antialiased selection:bg-accent selection:text-primary">
+                <Navbar />
+                <Hero profile={profile} />
+                <Projects projects={projects} />
+                <Contact profile={profile} />
+                <Footer />
             </div>
         );
     }
 
-    return (
-        <div className="bg-primary min-h-screen text-white font-sans antialiased selection:bg-accent selection:text-primary">
-            <Navbar />
-            <Hero profile={profile} />
-            <Projects projects={projects} />
-            <Contact profile={profile} />
-            <Footer />
-        </div>
-    );
-}
-
-export default App;
+    export default App;
