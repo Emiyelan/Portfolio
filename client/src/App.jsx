@@ -14,7 +14,7 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+                const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
                 const profileRes = await axios.get(`${API_URL}/api/profile`);
                 setProfile(profileRes.data);
 
