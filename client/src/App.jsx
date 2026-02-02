@@ -15,13 +15,17 @@ function App() {
         const fetchData = async () => {
             try {
                 const API_URL = (import.meta.env.VITE_API_URL || 'https://portfolio-dev-ixft.onrender.com').replace(/\/$/, '');
+                console.log("Attempting to fetch from API_URL:", API_URL); // DEBUG LOG
+
                 const profileRes = await axios.get(`${API_URL}/api/profile`);
+                console.log("Profile response:", profileRes); // DEBUG LOG
                 setProfile(profileRes.data);
 
                 const projectsRes = await axios.get(`${API_URL}/api/projects`);
                 setProjects(projectsRes.data);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching data. Full URL tried:", `${import.meta.env.VITE_API_URL}/api/profile`);
+                console.error("Error details:", error);
             } finally {
                 setLoading(false);
             }
