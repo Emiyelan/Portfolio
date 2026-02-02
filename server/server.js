@@ -50,6 +50,9 @@ const ProfileSchema = new mongoose.Schema({
 const Profile = mongoose.model('Profile', ProfileSchema);
 
 // API Routes
+app.get('/', (req, res) => {
+    res.send('API is running...');
+});
 
 // Get Profile Info
 app.get('/api/profile', async (req, res) => {
