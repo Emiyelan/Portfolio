@@ -18,13 +18,22 @@ function App() {
                 // Fetch Projects directly from GitHub
                 const githubUsername = 'Emiyelan';
                 const projectsRes = await axios.get(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=6`);
-                setProjects(projectsRes.data);
+
+                // Inject manual Live Demo link for Market Place Project
+                const projectsWithLinks = projectsRes.data.map(project => {
+                    if (project.name.toLowerCase().includes('market-place')) {
+                        return { ...project, homepage: 'https://market-place-project-46so.onrender.com' };
+                    }
+                    return project;
+                });
+
+                setProjects(projectsWithLinks);
             } catch (error) {
                 console.error("Error fetching projects from GitHub:", error);
                 // Fallback projects if GitHub API limit reached
                 setProjects([
-                    { id: 1, name: 'Portfolio-MERN', description: 'My personal portfolio website.', html_url: 'https://github.com/Emiyelan', language: 'JavaScript' },
-                    { id: 2, name: 'Project-Placeholder', description: 'A sample project.', html_url: 'https://github.com/Emiyelan', language: 'JavaScript' }
+                    { id: 1, name: 'market-place-project', description: 'A fully functional marketplace application.', html_url: 'https://github.com/Emiyelan', homepage: 'https://market-place-project-46so.onrender.com', language: 'MERN Stack' },
+                    { id: 2, name: 'Portfolio-MERN', description: 'My personal portfolio website.', html_url: 'https://github.com/Emiyelan', language: 'JavaScript' }
                 ]);
             } finally {
                 setLoading(false);
