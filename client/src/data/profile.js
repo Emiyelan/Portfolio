@@ -5,5 +5,5 @@ export const profile = {
     phone: '067 693 7921',
     github: 'https://github.com/Emiyelan',
     linkedin: 'https://www.linkedin.com/in/emmanuel-makaringe-753033216',
-    bio: 'Passionate developer proficient in the MERN stack. I love building web applications that solve real-world problems.'
+    bio: 'Software engineer passionate about building impactful digital experiences using modern technologies'
 };
